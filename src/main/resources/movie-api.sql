@@ -1,3 +1,4 @@
+
 use the_movies_db;
 
 DROP table if exists ratings;
