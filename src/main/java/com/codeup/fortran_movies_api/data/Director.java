@@ -1,27 +1,26 @@
 package com.codeup.fortran_movies_api.data;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name="directors")
 public class Director {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
 
     @OneToMany(mappedBy = "director")
-    @JsonIgnoreProperties("director")
     private List<Movie> directedMovies;
 
-    public Director(int id, String name) {
-        this.id = id;
-        this.name = name;
+    public Director() {
     }
 
-    public Director() {
+    public Director(int id, String name, List<Movie> directedMovies) {
+        this.id = id;
+        this.name = name;
+        this.directedMovies = directedMovies;
     }
 
     public int getId() {
@@ -49,11 +48,11 @@ public class Director {
     }
 
     @Override
-
     public String toString() {
         return "Director{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", directedMovies=" + directedMovies +
                 '}';
     }
 }

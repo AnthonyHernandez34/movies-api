@@ -1,82 +1,81 @@
-# 1. go get the json file from glitch
-# 2. copypasta into a new json file under /resources
+CREATE DATABASE IF NOT EXISTS movies_db;
+USE movies_db;
 
-# --> You may need to establish a connection to your localhost db here
+DROP TABLE IF EXISTS movie_genre;
+DROP TABLE IF EXISTS movie_actor;
+DROP TABLE IF EXISTS actors;
+DROP TABLE IF EXISTS genres;
+DROP TABLE IF EXISTS movies;
+DROP TABLE IF EXISTS directors;
 
-# 3. create the movies_db
-create database if not exists movies_db;
-
-# 4. use the movies_db
-use movies_db;
-
-# 5. drop the table(s) to which no other tables are dependent (none at first)
-drop table if exists movies;
-drop table if exists directors;
-
-# 6. map the json movie properties to movies table columns
-# --> start with just a movies table with all the columns found in the movie json properties
-create table if not exists directors
+CREATE TABLE IF NOT EXISTS directors
 (
-    id int unsigned not null auto_increment primary key,
-    name varchar(120)
+    id   INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    name VARCHAR(120) NOT NULL,
+    #INDEX movie_id (name),
+    PRIMARY KEY (id)
 );
 
-create table if not exists movies
+CREATE TABLE IF NOT EXISTS movies
 (
-    id       int unsigned not null auto_increment primary key,
-    title    varchar(120),
-    rating   char(1),
-    year     char(4),
-    poster   text,
-    plot     text,
-    director_id int unsigned not null,
-    foreign key (director_id) references directors(id)
+    id          INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    title       VARCHAR(120) NOT NULL,
+    rating      CHAR(1),
+    poster      TEXT,
+    year        CHAR(4)      NOT NULL,
+    genre       VARCHAR(120) NOT NULL,
+    plot        CHAR(255)    NOT NULL,
+    actors      VARCHAR(255) NOT NULL,
+    director_id INT UNSIGNED NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (director_id)
+        REFERENCES directors (id)
+        ON DELETE CASCADE
 );
 
-# 6a. Run the script to make sure it works
-describe movies;
-describe directors;
-
-# 7. refactor to extract the directors to a new table with just an id and name
-# --> change the movies table to reference the directors table via Foreign Key
-# --> now that movies is dependent on directors, you need to move directors above movies in the script
-
-# 8. Go add DROP IF EXIST statements for movies and directors
-
-# 9. RUN IT!
-
-create table if not exists genres
+CREATE TABLE IF NOT EXISTS genres
 (
-    id int unsigned not null auto_increment primary key,
-    name varchar(255)
+    id   INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    name VARCHAR(32),
+    PRIMARY KEY (id)
 );
 
-describe genres;
-
-create table if not exists movie_genre
+CREATE TABLE IF NOT EXISTS movie_genre
 (
-    movie_id int unsigned not null,
-    genre_id int unsigned not null,
-    foreign key (movie_id) references movies(id),
-    foreign key (genre_id) references genres(id)
+    movie_id INT UNSIGNED NOT NULL,
+    genre_id INT UNSIGNED NOT NULL,
+    FOREIGN KEY (movie_id) REFERENCES movies (id),
+    FOREIGN KEY (genre_id) REFERENCES genres (id)
 );
 
-describe movie_genre;
-
-create table if not exists actors
+CREATE TABLE IF NOT EXISTS actors
 (
-    id int unsigned not null auto_increment primary key,
-    name varchar(255)
+    id   INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    name VARCHAR(255),
+    PRIMARY KEY (id)
 );
 
-describe actors;
-
-create table if not exists movie_actor
+CREATE TABLE IF NOT EXISTS movie_actor
 (
-    movie_id int unsigned not null,
-    actor_id int unsigned not null,
-    foreign key (movie_id) references movies(id),
-    foreign key (actor_id) references actors(id)
+    movie_id INT UNSIGNED NOT NULL,
+    actor_id INT UNSIGNED NOT NULL,
+    FOREIGN KEY (movie_id) REFERENCES movies (id),
+    FOREIGN KEY (actor_id) REFERENCES actors (id)
 );
 
-describe movie_actor;
+DESCRIBE movie_actor;
+
+SELECT *
+FROM movies m
+WHERE CAST(m.year AS UNSIGNED) >= 1977
+  AND CAST(m.year AS UNSIGNED) <= 1980;
+
+INSERT INTO genres (name)
+VALUES ('comdey'),
+       ('drama'),
+       ('action'),
+       ('fantasy'),
+       ('horror'),
+       ('romance'),
+       ('hallmark romance'),
+       ('thriller');

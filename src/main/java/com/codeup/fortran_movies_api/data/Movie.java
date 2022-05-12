@@ -1,8 +1,5 @@
 package com.codeup.fortran_movies_api.data;
-
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import javax.persistence.*;
 import java.util.List;
 
@@ -15,15 +12,17 @@ public class Movie {
     private int id;
     private String title;
     private String year;
-    @ManyToOne
-    @JsonIgnoreProperties("directedMovies")
-    private Director director;
     private String plot;
     private String poster;
     private String rating;
 
-    @ManyToMany(mappedBy = "movies") // <- maps to the Genre class' movies property
-    @JsonIgnoreProperties("movies") // <- keeps Jackson from making a list of genres with a list of movies with a list of genres with a list of movies...
+    @ManyToOne
+    @JsonIgnoreProperties("directedMovies")
+    private Director director;
+
+
+    @ManyToMany(mappedBy = "movies")
+    @JsonIgnoreProperties("movies")
     private List<Genre> genres;
 
     public Movie(int id, String title, String year, String plot, String poster, String rating) {

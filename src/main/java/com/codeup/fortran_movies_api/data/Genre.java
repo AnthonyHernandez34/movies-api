@@ -1,6 +1,4 @@
 package com.codeup.fortran_movies_api.data;
-
-
 import javax.persistence.*;
 import java.util.List;
 
@@ -16,9 +14,9 @@ public class Genre {
     @ManyToMany
     @JoinTable(name = "movie_genre",
             joinColumns =
-            @JoinColumn(name = "genre_id", referencedColumnName = "id")
-//          @JoinColumn(name = "movie_id", referencedColumnName = "id")
-    )
+            @JoinColumn(name = "genre_id", referencedColumnName = "id"),
+            inverseJoinColumns =
+            @JoinColumn(name = "movie_id", referencedColumnName = "id"))
     private List<Movie> movies;
 
     public Genre(int id, String name) {
@@ -26,7 +24,7 @@ public class Genre {
         this.name = name;
     }
 
-    public Genre() {
+    public Genre(){
     }
 
     public int getId() {
@@ -57,4 +55,3 @@ public class Genre {
                 '}';
     }
 }
-
